@@ -10,26 +10,26 @@ CREATE TABLE department (
 
 
 CREATE TABLE role (
-  id INTEGER PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   title VARCHAR(30) UNIQUE NOT NULL, 
   salary DECIMAL NOT NULL,
-  department_id INTEGER NOT NULL
+  department_id INTEGER NOT NULL,
   FOREIGN KEY (department_id)
-  REFERENCES department(id),
+  REFERENCES department(id)
   ON DELETE CASCADE -- maybe ditch this, but probably useful
   );
 
 
 CREATE TABLE employee (
-  id INTEGER PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   first_name VARCHAR(30) UNIQUE NOT NULL, 
   last_name VARCHAR(30) UNIQUE NOT NULL, 
   role_id INTEGER NOT NULL, 
   FOREIGN KEY (role_id)
   REFERENCES role(id),
-  manager_id INTEGER --reference another employee
+  manager_id INTEGER, --reference another employee
   FOREIGN KEY (manager_id)
-  REFERENCES employee(id),
+  REFERENCES employee(id)
   ON DELETE CASCADE -- maybe ditch this, but probably useful
   );
 
