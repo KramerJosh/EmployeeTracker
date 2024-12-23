@@ -1,12 +1,14 @@
 // add routes for each table?
 
-// View All Depts               DONE!
-// view all roles               DONE!              
-// view all employees           DONE!
-// add a department             DONE!
-// add an employee              DONE!
-// update employee role         DONE!
-// Delete an Employee           DONE!
+// View All Depts               DONE! Added to Index.
+// view all roles               DONE! Added to Index.
+// view all employees           DONE! Added to Index.
+// add a department             DONE! Added to Index.
+// add an employee              DONE! Added to Index.
+// Add a role                   Done!
+// update employee role         DONE! Added to Index.
+// Delete an Employee           DONE! Added to Index.
+
 
 import express from 'express';
 import { QueryResult } from 'pg';
@@ -44,6 +46,24 @@ app.post('/api/new-dept', ({ body }, res) => {
   const sql = `INSERT INTO department (name)
     VALUES ($1)`;
   const params = [body.name];
+
+  pool.query(sql, params, (err, _result) => {
+    if (err) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
+    res.json({
+      message: 'success',
+      data: body,
+    });
+  });
+});
+
+// Create a new department
+app.post('/api/new-role', ({ body }, res) => {
+  const sql = `INSERT INTO role (title, salary, department_id)
+    VALUES ($1, $2, $3)`;
+  const params = [body.title, body.salary, body.department_id];
 
   pool.query(sql, params, (err, _result) => {
     if (err) {
@@ -114,6 +134,7 @@ app.get('/api/roles', (_req, res) => {
   });
 });
 
+
 // Read all employees
 app.get('/api/employee', (_req, res) => {
   const sql = `SELECT 
@@ -145,7 +166,6 @@ JOIN
     });
   });
 });
-
 
 // Delete an employee
 app.delete('/api/employee/:id', (req, res) => {
