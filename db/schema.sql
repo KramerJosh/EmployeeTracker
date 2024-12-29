@@ -1,3 +1,5 @@
+-- look into changing role to roles
+
 DROP DATABASE IF EXISTS employee_db;
 CREATE DATABASE employee_db;
 

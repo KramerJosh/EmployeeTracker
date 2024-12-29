@@ -86,16 +86,44 @@ async function viewAllDepartments() {
     main();
   }
 }
-// Function to prompt the user for role data
-async function createEmployee() {
-  const answers = await inquirer.prompt([
-    { type: 'input', name: 'first_name', message: 'Please enter Employee first name: ' },
-    { type: 'input', name: 'last_name', message: 'Please enter Employee last name: ' },
-    { type: 'input', name: 'role_id', message: 'Enter a role ID: ' },
-    { type: 'input', name: 'manager_id', message: 'Enter a manager ID: ' },
-  ]);
 
+// Function to prompt to create an employee
+async function createEmployee() {
   try {
+    // Fetch roles from the API
+    const rolesResponse = await fetch(`${API_BASE_URL}/roles`);
+    if (!rolesResponse.ok) {
+      throw new Error(`Failed to fetch roles. Status: ${rolesResponse.status}`);
+    }
+    const rolesData = await rolesResponse.json();
+    const roles = rolesData.data.map((role: { title: any; id: any; }) => ({ name: role.title, value: role.id }));
+
+    // Fetch employees to populate managers
+    const employeesResponse = await fetch(`${API_BASE_URL}/employee`);
+    if (!employeesResponse.ok) {
+      throw new Error(`Failed to fetch employees. Status: ${employeesResponse.status}`);
+    }
+    const employeesData = await employeesResponse.json();
+    const employees = employeesData.data;
+
+    // Map employees for the manager selection dropdown
+    const managers = employees.map((employee: { first_name: any; last_name: any; id: any; }) => ({
+      name: `${employee.first_name} ${employee.last_name}`,
+      value: employee.id,
+    }));
+
+    // Add a 'None' option for employees without a manager
+    managers.unshift({ name: 'None', value: null });
+
+    // Prompt the user with roles, managers, and other details
+    const answers = await inquirer.prompt([
+      { type: 'input', name: 'first_name', message: 'Please enter Employee first name: ' },
+      { type: 'input', name: 'last_name', message: 'Please enter Employee last name: ' },
+      { type: 'list', name: 'role_id', message: 'Select a role:', choices: roles },
+      { type: 'list', name: 'manager_id', message: 'Select a manager:', choices: managers },
+    ]);
+
+    // Send the data to the server
     const response = await fetch(`${API_BASE_URL}/new-employee`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -110,11 +138,10 @@ async function createEmployee() {
     console.log('Employee created successfully:', data.data);
     main();
   } catch (error) {
-    console.error('Error creating employee:');
+    console.error('Error creating employee:', error);
     main();
   }
 }
-
 
 
 

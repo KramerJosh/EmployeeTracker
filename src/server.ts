@@ -1,3 +1,7 @@
+// to populate the inquirer with options, should take the responses sent back from each API call
+// in the inquirer file I can use template literals like ${res.manager_id} - that should work well.
+
+
 // add routes for each table?
 
 // View All Depts               DONE! Added to Index.
@@ -5,7 +9,7 @@
 // view all employees           DONE! Added to Index.
 // add a department             DONE! Added to Index.
 // add an employee              DONE! Added to Index.
-// Add a role                   Done!
+// Add a role                   Done! Added to Index.
 // update employee role         DONE! Added to Index.
 // Delete an Employee           DONE! Added to Index.
 
