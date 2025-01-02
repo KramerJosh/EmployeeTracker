@@ -8,8 +8,8 @@
 // view all roles               DONE! Added to Index.
 // view all employees           DONE! Added to Index.
 // add a department             DONE! Added to Index.
-// add an employee              DONE! Added to Index.
-// Add a role                   Done! Added to Index.
+// add an employee              DONE! Added to Index.   
+// Add a role                   Done! Added to Index.   
 // update employee role         DONE! Added to Index.
 // Delete an Employee           DONE! Added to Index.
 
@@ -124,6 +124,33 @@ app.get('/api/depts', (_req, res) => {
 // Get all Roles
 app.get('/api/roles', (_req, res) => {
   const sql = `SELECT * FROM role;`;
+
+  pool.query(sql, (err: Error, result: QueryResult) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+      return;
+    }
+    const { rows } = result;
+    res.json({
+      message: 'success',
+      data: rows,
+    });
+  });
+});
+
+// Cleaner call for displaying all roles
+app.get('/api/roles-display', (_req, res) => {
+  const sql = `SELECT 
+    r.id AS role_id,
+    r.title AS role_title,
+    r.salary AS role_salary,
+    d.name AS department_name
+FROM 
+    role r
+JOIN 
+    department d
+ON 
+    r.department_id = d.id;`;
 
   pool.query(sql, (err: Error, result: QueryResult) => {
     if (err) {
