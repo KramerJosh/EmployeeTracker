@@ -13,6 +13,8 @@
 // update employee role         DONE! Added to Index.
 // Delete an Employee           DONE! Added to Index.
 
+// Delete an Employee should return a list of names
+// add a dept - check out that work flow...
 
 import express from 'express';
 import { QueryResult } from 'pg';
@@ -63,7 +65,7 @@ app.post('/api/new-dept', ({ body }, res) => {
   });
 });
 
-// Create a new department
+// Create a new role
 app.post('/api/new-role', ({ body }, res) => {
   const sql = `INSERT INTO role (title, salary, department_id)
     VALUES ($1, $2, $3)`;

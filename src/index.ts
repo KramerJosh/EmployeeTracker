@@ -178,7 +178,7 @@ async function createRole() {
   const depts = deptsData.data.map((dept: { name: any; id: any }) => ({
     name: dept.name,
     value: dept.id,
-  }));
+  })); 
 
   const answers = await inquirer.prompt([
     { type: "input", name: "title", message: "Please enter Job Title: " },
@@ -186,7 +186,7 @@ async function createRole() {
     {
       type: "list",
       name: "department_id",
-      message: "Enter a department ID: ",
+      message: "Select a department: ",
       choices: depts,
     },
   ]);
@@ -294,8 +294,21 @@ async function updateEmployee() {
 
 // Function to prompt the user to delete Employee
 async function deleteEmployee() {
+  const employeesResponse = await fetch(`${API_BASE_URL}/employee`);
+  if (!employeesResponse.ok) {
+    throw new Error(
+      `Failed to fetch employees. Status: ${employeesResponse.status}`
+    );
+  }
+  const employeesData = await employeesResponse.json();
+  const employees = employeesData.data.map((employee: { first_name: any; last_name: any, id: any }) => ({
+    name: `${employee.first_name} ${employee.last_name}`,
+    value: employee.id,
+}));
+
+
   const answers = await inquirer.prompt([
-    { type: "input", name: "id", message: "Enter an employee ID: " },
+    { type: "list", name: "id", message: "Select an employee: ", choices: employees,},
   ]);
   const employeeID = answers.id;
 
